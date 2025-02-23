@@ -1,0 +1,121 @@
+
+USecase -
+
+Get all movies running in all theaters with in a city with show time
+get seat availablity for particular show/movie in a theater
+Book movie for particular show in theater
+
+
+
+Model
+
+User
+String id;
+String name;
+
+
+SEAT
+String id;
+SeatType seatType;
+
+Booking
+Payment Payment;
+Show show;
+List<Seat> seats;
+User user;
+
+Payment
+String id;
+
+SHOW
+String theaterId;
+String startTime;
+String endTime;
+Movie movie;
+Screen screen;
+// screen will run multiple shows in a day
+List<Integer> bookedSeatsIds;
+
+Screen
+String screenId;
+List<Seat> seats;
+
+
+Theater
+String id;
+List<Show> shows;
+List<Screen> screens;
+Location location;
+
+Movie
+
+String name;
+String id;
+int duration;
+// other mete data
+
+Service
+
+UserService
+
+Map<String, User> users;
+void addUSer(User);
+User getUser(String id);
+
+TheaterService
+
+List<Theater> theaters;
+void addTheater(Theater theater);
+Theater getTheater(String id);
+
+// can be used for further enhancements
+
+SeatService
+
+void changeStatus(String seatId, Status status);
+
+
+ShowService
+Map<String, List<Show>> showsByCity;
+TheaterService theaterService;
+SeatService seatService;
+void addShow(SHow show, String city);
+void removeShow(Show show, String city);
+List<Show> getAllShowsByCityForMovie(String city, Movie movie);
+List<Movie> getAllMovieByCity(String city);
+String bookSeats(Booking);
+
+BookingService
+
+Map<String, Booking> bookingsByUser;
+ShowService showservice;
+String createBooking(Booking);
+
+
+BookMyShow
+
+ShowService showService;
+UserService userService;
+
+constructor();
+intializeData();
+
+// call getShows and CreateBooking and check seat not booked twice
+
+Enum
+
+SeatType - GOLD, PLATINUM, DIAMOND
+
+
+// we will use optimistic locking at the time of ready by both
+// user version will be v1
+// at update it will lock and update version to v2
+// WE CAN USE QUERY LEVEL VERSION IN DB FOR ROW OR USE ATOMICBOOLEAN FOR IS BOOKED
+// UPDATE seats
+// SET is_booked = true, version = version + 1
+// WHERE seat_id = ? AND version = ?;
+
+// for passimistic it will lock at read only so wont use it
+
+// redis can be used to implement timer locks
+
